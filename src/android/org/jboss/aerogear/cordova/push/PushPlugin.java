@@ -154,7 +154,7 @@ public class PushPlugin extends CordovaPlugin {
           PluginResult result = new PluginResult(PluginResult.Status.OK, pushConfig.getDeviceToken());
           result.setKeepCallback(true);
           callbackContext.sendPluginResult(result);
-		  callbackContext.success(pushConfig.getDeviceToken());;
+		  callbackContext.success("prova");
           //webView.sendJavascript("cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()");
         }
 
