@@ -151,11 +151,16 @@ public class PushPlugin extends CordovaPlugin {
         @Override
         public void onSuccess(Void data) {
           preferences.edit().putString(DEVICE_TOKEN, pushConfig.getDeviceToken()).commit();
-          PluginResult result = new PluginResult(PluginResult.Status.OK, pushConfig.getDeviceToken());
+          JSONObject obj = new JSONObject();
+          try {
+              obj.put("deviceToken", pushConfig.getDeviceToken());
+              obj.put("operatingSystem", pushConfig.getOperatingSystem());
+              obj.put("osVersion", pushConfig.getOsVersion());
+          } catch (JSONException e) { }
+
+          PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
           result.setKeepCallback(true);
           callbackContext.sendPluginResult(result);
-		  callbackContext.success("prova");
-          //webView.sendJavascript("cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()");
         }
 
         @Override
