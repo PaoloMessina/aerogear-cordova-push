@@ -97,13 +97,13 @@ Push.prototype.register = function (onNotification, successCallback, errorCallba
             dataType: "text"
         })
         .then( function( result ) {
-            cordova.exec(onNotification, errorCallback, "PushPlugin", "register", [JSON.parse(result.data)]);
+            cordova.exec(successCallback, errorCallback, "PushPlugin", "register", [JSON.parse(result.data)]);
         })
         .catch( function( error ) {
             errorCallback("Error reading config file " + error);
         });
     } else {
-        cordova.exec(onNotification, errorCallback, "PushPlugin", "register", [options]);
+        cordova.exec(successCallback, errorCallback, "PushPlugin", "register", [options]);
     }
 
 };
