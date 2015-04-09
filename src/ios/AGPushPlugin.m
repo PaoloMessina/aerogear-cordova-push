@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#import "AGPushPlugin.h"
+#import "PushPlugin.h"
 #import "AGDeviceRegistration.h"
 
-@implementation AGPushPlugin
+@implementation PushPlugin
 
 @synthesize notificationMessage;
 @synthesize isInline;
@@ -55,9 +55,9 @@
             [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
         #endif
 
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
-        [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        //CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+        //[pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+        //[self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
 
     if (notificationMessage)            // if there is a pending startup notification
@@ -83,7 +83,18 @@
     AGDeviceRegistration *registration = [[AGDeviceRegistration alloc] initWithServerURL:[NSURL URLWithString:url]];
 
     [registration registerWithClientInfo:[self pushConfig:deviceToken withDict:userDefaults] success:^() {
-        [self.commandDelegate evalJs:@"cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()"];
+        //[self.commandDelegate evalJs:@"cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()"];
+        NSMutableDictionary* obj = [[NSMutableDictionary alloc] init];
+        NSString* token = [[[[deviceToken description]
+                             stringByReplacingOccurrencesOfString: @"<" withString: @""]
+                            stringByReplacingOccurrencesOfString: @">" withString: @""]
+                           stringByReplacingOccurrencesOfString: @" " withString: @""];
+        [obj setObject:token forKey:@"deviceToken"];
+        [obj setObject:@"ios" forKey:@"operatingSystem"];
+        [obj setObject:[UIDevice currentDevice].systemVersion forKey:@"osVersion"];
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:obj];
+        [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
     } failure:^(NSError *error) {
         [self failWithError:error];
     }];
