@@ -17,7 +17,7 @@
 #import "AGPushPlugin.h"
 #import "AGDeviceRegistration.h"
 
-@implementation PushPlugin
+@implementation AGPushPlugin
 
 @synthesize notificationMessage;
 @synthesize isInline;
