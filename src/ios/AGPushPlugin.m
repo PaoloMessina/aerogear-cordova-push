@@ -84,6 +84,8 @@
 
     [registration registerWithClientInfo:[self pushConfig:deviceToken withDict:userDefaults] success:^() {
         //[self.commandDelegate evalJs:@"cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()"];
+        NSMutableDictionary* retData = [[NSMutableDictionary alloc] init];
+        [retData setObject:@"successCallback" forKey:@"type"];
         NSMutableDictionary* obj = [[NSMutableDictionary alloc] init];
         NSString* token = [[[[deviceToken description]
                              stringByReplacingOccurrencesOfString: @"<" withString: @""]
@@ -92,7 +94,8 @@
         [obj setObject:token forKey:@"deviceToken"];
         [obj setObject:@"ios" forKey:@"operatingSystem"];
         [obj setObject:[UIDevice currentDevice].systemVersion forKey:@"osVersion"];
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:obj];
+        [retData setObject:obj forKey:@"retData"];
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:retData];
         [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.callbackId];
     } failure:^(NSError *error) {
@@ -113,7 +116,10 @@
         [extraPayload removeObjectForKey:@"aps"];
         [message setObject:extraPayload forKey:@"payload"];
         [message setObject:[NSNumber numberWithBool:isInline] forKey:@"foreground"];
-        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:message];
+        NSMutableDictionary* retData = [[NSMutableDictionary alloc] init];
+        [retData setObject:@"onNotificationCallback" forKey:@"type"];
+        [retData setObject:message forKey:@"retData"];
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:retData];
         [result setKeepCallback:[NSNumber numberWithBool:YES]];
         [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
         self.notificationMessage = nil;
