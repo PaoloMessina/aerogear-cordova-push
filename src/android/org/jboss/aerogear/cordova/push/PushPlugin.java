@@ -153,9 +153,12 @@ public class PushPlugin extends CordovaPlugin {
           preferences.edit().putString(DEVICE_TOKEN, pushConfig.getDeviceToken()).commit();
           JSONObject obj = new JSONObject();
           try {
-              obj.put("deviceToken", pushConfig.getDeviceToken());
-              obj.put("operatingSystem", pushConfig.getOperatingSystem());
-              obj.put("osVersion", pushConfig.getOsVersion());
+			  obj.put("type", "successCallback");
+			  JSONObject data = new JSONObject();
+              data.put("deviceToken", pushConfig.getDeviceToken());
+              data.put("operatingSystem", pushConfig.getOperatingSystem());
+              data.put("osVersion", pushConfig.getOsVersion());
+			  obj.put("retData", data);
           } catch (JSONException e) { }
 
           PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
@@ -222,7 +225,12 @@ public class PushPlugin extends CordovaPlugin {
     if (message != null) {
       message.putBoolean("foreground", foreground);
       if (context != null) {
-        PluginResult result = new PluginResult(PluginResult.Status.OK, convertBundleToJson(message));
+		JSONObject obj = new JSONObject();
+          try {
+			obj.put("type", "onNotificationCallback");
+			obj.put("retData", convertBundleToJson(message));
+        } catch (JSONException e) { }
+        PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
         result.setKeepCallback(true);
         context.sendPluginResult(result);
       } else {
