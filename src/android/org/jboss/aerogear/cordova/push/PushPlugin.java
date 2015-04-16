@@ -154,11 +154,11 @@ public class PushPlugin extends CordovaPlugin {
           JSONObject obj = new JSONObject();
           try {
 			  obj.put("type", "successCallback");
-			  JSONObject data = new JSONObject();
-              data.put("deviceToken", pushConfig.getDeviceToken());
-              data.put("operatingSystem", pushConfig.getOperatingSystem());
-              data.put("osVersion", pushConfig.getOsVersion());
-			  obj.put("retData", data);
+			  JSONObject retdata = new JSONObject();
+              retdata.put("deviceToken", pushConfig.getDeviceToken());
+              retdata.put("operatingSystem", pushConfig.getOperatingSystem());
+              retdata.put("osVersion", pushConfig.getOsVersion());
+			  obj.put("retData", retdata);
           } catch (JSONException e) { }
 
           PluginResult result = new PluginResult(PluginResult.Status.OK, obj);
