@@ -82,7 +82,7 @@ Push.prototype.register = function (onNotification, successCallback, errorCallba
     this.successCallback = successCallback;
 	this.onNotificationCallback = onNotification;
 	
-	this.cordovaCallback = function(data) {
+	var cordovaCallback = function(data) {
 		var kindOfCallback = data.type;
 		var retData = data.retData;
 		if(kindOfCallback === 'successCallback'){
@@ -90,7 +90,7 @@ Push.prototype.register = function (onNotification, successCallback, errorCallba
 		} else {
 			this.onNotificationCallback(retData);
 		}
-	};
+	}.bind(this);
 
     if (errorCallback == null) {
         errorCallback = function () {
@@ -108,13 +108,13 @@ Push.prototype.register = function (onNotification, successCallback, errorCallba
             dataType: "text"
         })
         .then( function( result ) {
-            cordova.exec(this.cordovaCallback, errorCallback, "PushPlugin", "register", [JSON.parse(result.data)]);
+            cordova.exec(cordovaCallback, errorCallback, "PushPlugin", "register", [JSON.parse(result.data)]);
         })
         .catch( function( error ) {
             errorCallback("Error reading config file " + error);
         });
     } else {
-        cordova.exec(this.cordovaCallback, errorCallback, "PushPlugin", "register", [options]);
+        cordova.exec(cordovaCallback, errorCallback, "PushPlugin", "register", [options]);
     }
 
 };
