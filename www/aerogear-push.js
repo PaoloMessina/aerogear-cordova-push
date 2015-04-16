@@ -108,13 +108,13 @@ Push.prototype.register = function (onNotification, successCallback, errorCallba
             dataType: "text"
         })
         .then( function( result ) {
-            cordova.exec(cordovaCallback, errorCallback, "PushPlugin", "register", [JSON.parse(result.data)]);
+            cordova.exec(this.cordovaCallback, errorCallback, "PushPlugin", "register", [JSON.parse(result.data)]);
         })
         .catch( function( error ) {
             errorCallback("Error reading config file " + error);
         });
     } else {
-        cordova.exec(cordovaCallback, errorCallback, "PushPlugin", "register", [options]);
+        cordova.exec(this.cordovaCallback, errorCallback, "PushPlugin", "register", [options]);
     }
 
 };
