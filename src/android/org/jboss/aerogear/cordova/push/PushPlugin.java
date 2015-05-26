@@ -85,7 +85,14 @@ public class PushPlugin extends CordovaPlugin {
       Log.v(TAG, "execute: data=" + data.toString());
 	  context = callbackContext;
 	  try {
-        if(data.getJSONObject(0).getBoolean("idle")) return true;
+        if(data.getJSONObject(0).getBoolean("idle")){
+          if (cachedMessage != null) {
+            Log.v(TAG, "sending cached extras");
+            sendMessage(cachedMessage);
+            cachedMessage = null;
+          }
+          return true;
+        }
       } catch (JSONException e) {}
       try {
         JSONObject pushConfig = parseConfig(data);
