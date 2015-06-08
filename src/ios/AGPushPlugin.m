@@ -81,6 +81,10 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *url = [userDefaults objectForKey:@"pushServerURL"];
     AGDeviceRegistration *registration = [[AGDeviceRegistration alloc] initWithServerURL:[NSURL URLWithString:url]];
+	
+	if([userDefaults objectForKey:@"idle"]){
+		return;
+	}
 
     [registration registerWithClientInfo:[self pushConfig:deviceToken withDict:userDefaults] success:^() {
         //[self.commandDelegate evalJs:@"cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()"];
